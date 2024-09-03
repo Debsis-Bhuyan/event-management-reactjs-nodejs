@@ -28,7 +28,6 @@ router.post("/create-event", authenticateToken, async (req, res) => {
   }
 });
 
-// Get All Events
 router.get("/get-all", async (req, res) => {
   try {
     const eventList = await findAllEvents();
@@ -95,7 +94,6 @@ router.put("/update/:eventId", authenticateToken, async (req, res) => {
   }
 });
 
-// Delete Event
 router.delete("/delete/:eventId", authenticateToken, async (req, res) => {
   try {
     const eventId = req.params.eventId;

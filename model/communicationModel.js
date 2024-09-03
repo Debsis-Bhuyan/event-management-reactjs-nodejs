@@ -1,7 +1,6 @@
 import mongoose from "mongoose";
 const Schema = mongoose.Schema;
 
-// Define the CommunicationModel schema
 const CommunicationSchema = new Schema({
   event: {
     type: Schema.Types.ObjectId,
@@ -28,7 +27,6 @@ const CommunicationSchema = new Schema({
   },
 });
 
-// Create the Communication model
 const CommunicationModel = mongoose.model('CommunicationModel', CommunicationSchema);
 
 export default CommunicationModel;

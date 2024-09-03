@@ -6,7 +6,7 @@ const router = Router()
 
 router.post('/register/:eventId', authenticateToken, async (req, res) => {
     try {
-        const userId = req.user.id; // Get the current authenticated user ID
+        const userId = req.user.id;
         const { eventId } = req.params;
         const ticketDTO = req.body;
 
@@ -18,7 +18,6 @@ router.post('/register/:eventId', authenticateToken, async (req, res) => {
     }
 });
 
-// Get the list of attendees for an event
 router.get('/attendees/:eventId', async (req, res) => {
     try {
         const { eventId } = req.params;
@@ -30,7 +29,7 @@ router.get('/attendees/:eventId', async (req, res) => {
     }
 });
 
-// Get ticket sales for an event
+
 router.get('/ticket-sales/:eventId', async (req, res) => {
     try {
         const { eventId } = req.params;
@@ -42,7 +41,6 @@ router.get('/ticket-sales/:eventId', async (req, res) => {
     }
 });
 
-// Get events where the user is an attendee
 router.get('/attendee-events', authenticateToken, async (req, res) => {
     try {
         const userId = req.user.id; 

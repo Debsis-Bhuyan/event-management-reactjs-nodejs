@@ -19,10 +19,16 @@ async function registerUser(userDTO) {
     });
 
     await newUser.save();
+    const token = jwt.sign(
+      { id: newUser._id, email: newUser.email },
+      process.env.JWT_SECRET_KEY,
+      { expiresIn: "1h" }
+    );
     return {
       statusCode: 200,
       message: "User created successfully",
       user: newUser,
+      token,
     };
   } catch (error) {
     return {
@@ -67,6 +73,58 @@ async function loginUser(loginRequest) {
     };
   }
 }
+
+export const googleSignUpOrLogin = async (req, res, next) => {
+  try {
+    const { fullName, email } = req.body;
+
+    let user = await User.findOne({ email });
+
+    if (user) {
+      const token = jwt.sign(
+        { id: user._id, email: user.email },
+        process.env.JWT_SECRET_KEY,
+        { expiresIn: "1h" }
+      );
+
+      return res.status(200).json({
+        success: true,
+        message: "Login successful",
+        user,
+        token,
+      });
+    }
+
+    const password = "password123";
+    user = await User.create({
+      fullName,
+      email,
+      password: password,
+      authProvider: "Google",
+    });
+
+    user.password = undefined;
+
+    const token = jwt.sign(
+      { id: user._id, email: user.email },
+      process.env.JWT_SECRET_KEY,
+      { expiresIn: "1h" }
+    );
+
+    res.status(201).json({
+      success: true,
+      message: "User created successfully",
+      user,
+      token,
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(400).json({
+      message: error.message || "Error occurred during user registration",
+    });
+  }
+};
+
 
 async function getAllUsers() {
   try {

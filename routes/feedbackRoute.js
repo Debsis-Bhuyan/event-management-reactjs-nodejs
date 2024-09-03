@@ -35,7 +35,6 @@ router.get('/feed/:eventId', async (req, res) => {
     }
 });
 
-// Get feedbacks by user ID
 router.get('/user/:userId', async (req, res) => {
     try {
         const { userId } = req.params;

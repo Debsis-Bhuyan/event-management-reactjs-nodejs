@@ -21,7 +21,6 @@ router.post("/create/:eventId", authenticateToken, async (req, res) => {
   }
 });
 
-// Route to get feedback by event ID
 router.get("/event/:eventId", async (req, res) => {
   const { eventId } = req.params;
   try {

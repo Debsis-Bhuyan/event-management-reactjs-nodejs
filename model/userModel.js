@@ -31,7 +31,6 @@ const UserSchema = new mongoose.Schema({
   },
 });
 
-// Middleware to hash password before saving user
 UserSchema.pre('save', async function (next) {
   if (!this.isModified('password')) {
     return next();
@@ -42,12 +41,10 @@ UserSchema.pre('save', async function (next) {
   next();
 });
 
-// Instance method to compare password
 UserSchema.methods.comparePassword = async function (enteredPassword) {
   return await bcrypt.compare(enteredPassword, this.password);
 };
 
-// Expose methods from UserDetails interface
 UserSchema.methods.getAuthorities = function () {
   return [];
 };
@@ -72,13 +69,11 @@ UserSchema.methods.isEnabled = function () {
   return true;
 };
 
-// Update the updatedAt field before updating
 UserSchema.pre('findOneAndUpdate', function (next) {
   this._update.updatedAt = Date.now();
   next();
 });
 
-// Create the User model
 const User = mongoose.model('User', UserSchema);
 
 export default User;

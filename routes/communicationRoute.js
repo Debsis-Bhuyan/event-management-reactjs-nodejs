@@ -8,14 +8,13 @@ import {
 
 const router = Router();
 
-// POST /api/events/:eventId/communicate
 router.post("/communicate/:eventId", authenticateToken, async (req, res) => {
   const { eventId } = req.params;
   const { recipientId } = req.query;
   const { message } = req.body;
 
   try {
-    const currentUser = req.user; // From `verifyUser` middleware
+    const currentUser = req.user;
 
     const response = await sendCommunication(
       eventId,
@@ -31,7 +30,6 @@ router.post("/communicate/:eventId", authenticateToken, async (req, res) => {
   }
 });
 
-// GET /api/events/:eventId/communications/:senderId
 router.get("/:eventId/communications/:senderId", async (req, res) => {
   const { eventId, senderId } = req.params;
 
@@ -45,7 +43,6 @@ router.get("/:eventId/communications/:senderId", async (req, res) => {
   }
 });
 
-// GET /api/events/recipient
 router.get("/recipient", authenticateToken, async (req, res) => {
   try {
     const currentUser = req.user;

@@ -2,7 +2,6 @@ import User from "../model/userModel.js";
 import Event from "../model/eventModel.js";
 import Communication from "../model/communicationModel.js";
 
-// Function to send a communication message
 const sendCommunication = async (
   eventId,
   senderId,
@@ -53,7 +52,6 @@ const sendCommunication = async (
   }
 };
 
-// Function to retrieve communications by eventId and senderId
 const getCommunications = async (eventId, senderId) => {
   try {
     const communications = await Communication.find({
@@ -76,7 +74,6 @@ const getCommunications = async (eventId, senderId) => {
   }
 };
 
-// Function to retrieve communications by recipientId
 const getCommunicationsByRecipientId = async (recipientId) => {
   try {
     const communications = await Communication.find({

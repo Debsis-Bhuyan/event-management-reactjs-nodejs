@@ -1,8 +1,6 @@
-// models/Event.js
 import mongoose from 'mongoose'
 const Schema = mongoose.Schema;
 
-// Define the Event schema
 const EventSchema = new Schema({
   title: {
     type: String,
@@ -39,7 +37,6 @@ const EventSchema = new Schema({
   },
 });
 
-// Create the Event model
 const Event = mongoose.model('Event', EventSchema);
 
 export default Event

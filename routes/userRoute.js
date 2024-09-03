@@ -5,6 +5,7 @@ import {
   getAllUsers,
   getUserById,
   getUserByToken,
+  googleSignUpOrLogin,
   loginUser,
   registerUser,
   updateUser,
@@ -21,6 +22,7 @@ router.post("/login", async (req, res) => {
   const response = await loginUser(req.body);
   res.status(response.statusCode).json(response);
 });
+router.post("/sign-up", googleSignUpOrLogin);
 
 router.get("/all-users", async (req, res) => {
   try {
@@ -30,11 +32,10 @@ router.get("/all-users", async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 });
-router.get(
-  "/user",
-  authenticateToken,
-  async (req, res) => {const response = await getUserByToken(req.user.id); return res.status(200).json(response)}
-);
+router.get("/user", authenticateToken, async (req, res) => {
+  const response = await getUserByToken(req.user.id);
+  return res.status(200).json(response);
+});
 
 router.get("/:id", async (req, res) => {
   const response = await getUserById(req.params.id);

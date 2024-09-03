@@ -4,7 +4,6 @@ import Payment from "../model/paymentModel.js";
 import Ticket from "../model/ticketModel.js";
 
 const TicketService = {
-  // Register an attendee for an event
   registerAttendee: async (eventId, userId, ticketDTO) => {
     const ticketResponse = {};
 
@@ -43,7 +42,6 @@ const TicketService = {
     return ticketResponse;
   },
 
-  // Get the list of attendees for an event
   getAttendeeList: async (eventId) => {
     try {
       const tickets = await Ticket.find({ event: eventId }).populate(
@@ -63,7 +61,6 @@ const TicketService = {
     }
   },
 
-  // Get ticket sales for an event
   getTicketSales: async (eventId) => {
     try {
       const tickets = await Ticket.find({ event: eventId });
@@ -94,7 +91,6 @@ const TicketService = {
     }
   },
 
-  // Get events where the user is an attendee
   getEventsByUserAsAttendee: async (userId) => {
     try {
       const tickets = await Ticket.find({ user: userId }).populate(
@@ -120,7 +116,6 @@ const TicketService = {
   },
 };
 
-// Helper function to create a Ticket object
 async function getTicket(ticketDTO, event, user) {
   const payment = new Payment({
     paymentType: ticketDTO.payment.paymentType,
@@ -141,7 +136,6 @@ async function getTicket(ticketDTO, event, user) {
   return ticket;
 }
 
-// Helper function to map Ticket entity to TicketDTO
 function mapTicketEntityToTicketDTO(ticket) {
   return {
     eventId: ticket.event._id,

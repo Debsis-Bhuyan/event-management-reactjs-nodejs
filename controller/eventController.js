@@ -134,7 +134,6 @@ async function updateEventById(userId, eventId, eventDetails) {
       const ticketPricingData = await TicketPricing.findById(
         eventDetails.ticketPricing?._id
       );
-      // const newPricing = await TicketPricing.create(eventDetails.ticketPricing);
       ticketPricingData.basicPrice = eventDetails.ticketPricing.basicPrice;
       ticketPricingData.standardPrice =
         eventDetails.ticketPricing.standardPrice;

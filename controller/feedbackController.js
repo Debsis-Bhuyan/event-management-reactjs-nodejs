@@ -8,7 +8,6 @@ export const submitFeedback = async (userId, eventId, feedbackMessageDTO) => {
   };
 
   try {
-    // Validate inputs
     if (!userId || !eventId || !feedbackMessageDTO.message) {
       throw new Error(
         "Invalid input: userId, eventId, and message are required."
