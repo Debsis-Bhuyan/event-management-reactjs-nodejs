@@ -3,10 +3,11 @@ import logo from "../assets/logoHyS.png";
 import google from "../assets/google.png";
 import facebook from "../assets/FacebookImage.webp";
 import axios from "axios";
-import { APP_URL } from "../utils";
+import { APP_URL, getGoogleSignUp } from "../utils";
 import { useDispatch } from "react-redux";
 import { setUser } from "../store/userSlice";
 import RegisterDialog from "./RegisterDialogBox";
+import { useGoogleLogin } from "@react-oauth/google";
 
 const LoginDialogBox = ({ isOpen, onClose }) => {
   const [loading, setLoading] = useState(false);
@@ -30,7 +31,7 @@ const LoginDialogBox = ({ isOpen, onClose }) => {
     setError("");
 
     try {
-      const response = await axios.post(`${APP_URL}/auth/login`, formData, {
+      const response = await axios.post(`${APP_URL}/users/login`, formData, {
         withCredentials: true,
       });
       console.log(response.data);
@@ -47,7 +48,19 @@ const LoginDialogBox = ({ isOpen, onClose }) => {
   };
 
   if (!isOpen) return null;
+  const googleLogin = useGoogleLogin({
+    onSuccess: async (tokenResponse) => {
+      setLoading(true);
+      const user = await getGoogleSignUp(tokenResponse.access_token);
+      setLoading(false);
+      console.log(user)
+      if (user.success === true) {
+        dispatch(setUser(user));
+        onClose();
 
+      }
+    },
+  });
   return (
     <div className="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50">
       <div className="bg-white rounded-lg shadow-lg p-6 w-full max-w-md">
@@ -112,10 +125,7 @@ const LoginDialogBox = ({ isOpen, onClose }) => {
             <button
               type="button"
               className="w-full inline-flex items-center justify-center mb-5 py-2 px-4 border border-gray-300 shadow-sm text-base font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50"
-              onClick={() => {
-                window.location.href =
-                  "http://localhost:8888/oauth2/authorization/google";
-              }}
+              onClick={() => googleLogin()}
             >
               <img src={google} alt="Google" className="h-6 mr-2" />
               Sign in with Google
@@ -124,10 +134,10 @@ const LoginDialogBox = ({ isOpen, onClose }) => {
               type="button"
               className="w-full inline-flex items-center justify-center mb-5 py-2 px-4 border border-gray-300 shadow-sm text-base font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50"
               
-              onClick={() => {
-                window.location.href =
-                  "http://localhost:8888/oauth2/authorization/facebook";
-              }}
+              // onClick={() => {
+              //   window.location.href =
+              //     "http://localhost:8888/oauth2/authorization/facebook";
+              // }}
             >
               <img src={facebook} alt="Facebook" className="h-6 mr-2" />
               Sign in with Facebook
@@ -139,7 +149,6 @@ const LoginDialogBox = ({ isOpen, onClose }) => {
           </div>
         </form>
         {openRegister && (
-            // <RegisterDialog />
             <RegisterDialog isOpen={isOpen} onClose={onClose} />
 
         )}

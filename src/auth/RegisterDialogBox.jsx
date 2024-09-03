@@ -1,12 +1,13 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import { APP_URL } from "../utils";
+import { APP_URL, getGoogleSignUp } from "../utils";
 import { useDispatch } from "react-redux";
 import { setUser } from "../store/userSlice";
 import logo from "../assets/logoHyS.png";
 import google from "../assets/google.png";
 import facebook from "../assets/FacebookImage.webp";
+import { useGoogleLogin } from "@react-oauth/google";
 
 const RegisterDialog = ({ isOpen, onClose }) => {
   const [formData, setFormData] = useState({
@@ -36,7 +37,7 @@ const RegisterDialog = ({ isOpen, onClose }) => {
     setError("");
 
     try {
-      const response = await axios.post(`${APP_URL}/auth/register`, formData);
+      const response = await axios.post(`${APP_URL}/users/register`, formData);
       if (response.data?.token) {
         alert("Registered Successfully ");
         dispatch(setUser(response.data));
@@ -51,6 +52,20 @@ const RegisterDialog = ({ isOpen, onClose }) => {
     }
   };
 
+  const googleLogin = useGoogleLogin({
+    onSuccess: async (tokenResponse) => {
+      setLoading(true);
+      const user = await getGoogleSignUp(tokenResponse.access_token);
+      setLoading(false);
+      console.log(user)
+      if (user.success === true) {
+        dispatch(setUser(user));
+        setTimeout(() => {
+          navigate("/dashboard");
+        }, 50);
+      }
+    },
+  });
   if (!isOpen) return null;
 
   return (
@@ -67,7 +82,7 @@ const RegisterDialog = ({ isOpen, onClose }) => {
             className="text-gray-500 text-3xl hover:text-gray-700"
           >
             &times;
-          </button>{" "}
+          </button>
         </div>
         <h2 className="font-bold text-2xl text-center">Create an Account</h2>
         <p className="my-1 text-sm text-gray-700 text-center">
@@ -130,10 +145,7 @@ const RegisterDialog = ({ isOpen, onClose }) => {
             <button
               type="button"
               className="w-full inline-flex items-center justify-center mb-5 py-2 px-4 border border-gray-300 shadow-sm text-base font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50"
-              onClick={() => {
-                window.location.href =
-                  "http://localhost:8888/oauth2/authorization/google";
-              }}
+              onClick={() => googleLogin()}
             >
               <img src={google} alt="Google" className="h-6 mr-2" />
               Sign up with Google
@@ -141,15 +153,14 @@ const RegisterDialog = ({ isOpen, onClose }) => {
             <button
               type="button"
               className="w-full inline-flex items-center justify-center mb-5 py-2 px-4 border border-gray-300 shadow-sm text-base font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50"
-              onClick={() => {
-                window.location.href =
-                  "http://localhost:8888/oauth2/authorization/facebook";
-              }}
+              // onClick={() => {
+              //   window.location.href =
+              //     "http://localhost:8888/oauth2/authorization/facebook";
+              // }}
             >
               <img src={facebook} alt="Facebook" className="h-6 mr-2" />
               Sign up with Facebook
             </button>
-           
           </div>
         </form>
       </div>
